@@ -8,10 +8,8 @@ import java.net.UnknownHostException;
 public class Test {
     public void ApplyProcess()
     {
-
         try{
-            Socket socket = new Socket("127.0.0.1",8080);
-            Client client = new Client(socket);
+            Client client = new Client(new Socket("127.0.0.1",8080));
             int workNumber = client.applyWork();
             int result = client.execute(workNumber);
             boolean ensureResult=client.sendStatus(workNumber);

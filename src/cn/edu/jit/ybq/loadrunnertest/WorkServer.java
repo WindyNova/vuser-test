@@ -107,7 +107,9 @@ public class WorkServer {
                 pw.close();
                 br.close();
                 socket.close();
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
 
@@ -115,21 +117,15 @@ public class WorkServer {
     }
 
     public static void main(String[] args) {
-        ServerSocket serverSocket;
         WorkQueue queue = new WorkQueue(200000);
         try {
-            serverSocket = new ServerSocket(8000);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
+            ServerSocket serverSocket = new ServerSocket(8080);
             int clientNumber = 0;
             while (true) {
                 Socket socket = new Socket();
                 socket = serverSocket.accept();
                 clientNumber++;
-                new AcceptClientThread(socket, clientNumber, queue).start();
-            }
+                new AcceptClientThread(socket, clientNumber, queue).start();}
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
