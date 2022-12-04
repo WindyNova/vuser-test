@@ -17,6 +17,7 @@ public class WorkServer {
         private final int[] workFlag;
         int nowNumber;
 
+
         WorkQueue(int totalNumber) {
             this.workFlag = new int[totalNumber];
             for (int i = 0; i < totalNumber; i++) {
@@ -25,8 +26,8 @@ public class WorkServer {
             this.nowNumber = 1;
         }
 
-        //接受客户端
-        int giveOutWork() {
+        //接受客户端                    ybq
+        synchronized int giveOutWork() {
             int k = this.nowNumber;
             this.workFlag[this.nowNumber] = 1;
 
@@ -44,7 +45,7 @@ public class WorkServer {
                 this.workFlag[workNumber] = 2;
                 return true;
             } else {
-                System.err.println();
+                System.err.println("Work" + workNumber + "Cannot be finished,WorkFlag is" + workFlag[workNumber]);
             }
             return false;
         }
@@ -65,13 +66,8 @@ public class WorkServer {
             this.queue = queue;
         }
 
-        int giveOutWork() {
-            try {
-                sleep(100);
-
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+        int giveOutWork() throws InterruptedException {
+            sleep(100);
             return queue.giveOutWork();
         }
 
@@ -122,10 +118,10 @@ public class WorkServer {
             ServerSocket serverSocket = new ServerSocket(8080);
             int clientNumber = 0;
             while (true) {
-                Socket socket = new Socket();
-                socket = serverSocket.accept();
+                Socket socket = serverSocket.accept();
                 clientNumber++;
-                new AcceptClientThread(socket, clientNumber, queue).start();}
+                new AcceptClientThread(socket, clientNumber, queue).start();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
